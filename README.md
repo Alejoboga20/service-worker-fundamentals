@@ -9,7 +9,7 @@
 npm -g install http-server
 ```
 
-2. Run `http-server` in the root directory.
+2. Run `http-server` in the root directory (select the unit you need to run).
 
 ```bash
 http-server -p 3000 -o
