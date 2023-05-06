@@ -21,10 +21,12 @@ self.addEventListener('activate', (event) => {
 /* Fetch: Handling HTTP Requests */
 self.addEventListener('fetch', (event) => {
 	/* Handle the cache */
-	console.log(event.request.url);
+});
 
-	if (event.request.url.includes('reqres.in')) {
-		const response = new Response(`{ok: false, message: 'Nope'}`);
-		event.respondWith(response);
-	}
+/* Sync: When recover internet conection */
+self.addEventListener('sync', (event) => {
+	/* Send data to server */
+	console.log('There is conection again');
+	console.log(event);
+	console.log(event.tag);
 });

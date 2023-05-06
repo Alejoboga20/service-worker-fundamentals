@@ -1,8 +1,9 @@
 // Check if service worker is available in this browser
 if ('serviceWorker' in navigator) {
-	navigator.serviceWorker.register('/sw.js');
+	navigator.serviceWorker.register('/sw.js').then((reg) => {
+		setTimeout(() => {
+			reg.sync.register('post-data');
+			console.log('Sync registered');
+		}, 3000);
+	});
 }
-
-fetch('https://reqres.in/api/users')
-	.then((response) => response.text())
-	.then((data) => console.log({ data }));

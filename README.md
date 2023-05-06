@@ -20,3 +20,4 @@ http-server -p 3000 -o
 ## Resources
 
 - [PWA Can I Use Service Worker](https://caniuse.com/?search=service%20worker)
+- [PWA Can I Use Sync Manager](https://caniuse.com/?search=syncmanager)
