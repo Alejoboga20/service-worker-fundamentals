@@ -16,3 +16,7 @@ http-server -p 3000 -o
 ```
 
 3. Access the site at `http://localhost:3000`.
+
+## Resources
+
+- [PWA Can I Use Service Worker](https://caniuse.com/?search=service%20worker)
