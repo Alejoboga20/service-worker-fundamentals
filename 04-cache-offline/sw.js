@@ -4,6 +4,7 @@ self.addEventListener('install', (e) => {
 	const cachePromise = caches.open('cache-1').then((cache) => {
 		/* Save app shell in cache */
 		return cache.addAll([
+			'/',
 			'index.html',
 			'css/style.css',
 			'img/main.jpg',
@@ -13,4 +14,10 @@ self.addEventListener('install', (e) => {
 	});
 
 	e.waitUntil(cachePromise);
+});
+
+/* Cache strategies */
+self.addEventListener('fetch', (e) => {
+	/* Cache only: the entire app is served from the cache */
+	e.respondWith(caches.match(e.request));
 });
