@@ -1,7 +1,9 @@
 self.addEventListener('fetch', (event) => {
-	const offlineResponse =
-		new Response(`Welcome to the offline page. You must be online to use the page
-  `);
+	const offlineResponse = new Response(`<h1>Oops! You're offline!</h1>`, {
+		headers: {
+			'Content-Type': 'text/html',
+		},
+	});
 
 	const response = fetch(event.request).catch(() => offlineResponse);
 
