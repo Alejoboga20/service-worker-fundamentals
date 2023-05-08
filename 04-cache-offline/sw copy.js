@@ -33,22 +33,23 @@ self.addEventListener('install', (e) => {
 
 /* Cache strategies */
 self.addEventListener('fetch', (e) => {
-	/* Network with cache fallback */
+	/* Cache only: the entire app is served from the cache */
+	//e.respondWith(caches.match(e.request));
 
-	const newResp = fetch(e.request)
-		.then((response) => {
-			if (!response) return caches.match(e.request);
+	/* Cache with network fallback: try first cache and then network */
+	const response = caches.match(e.request).then((resp) => {
+		if (resp) return resp;
 
+		return fetch(e.request).then((newResp) => {
+			/* Save new response in the cache */
 			caches.open(DYNAMIC_CACHE).then((cache) => {
-				cache.put(e.request, response);
+				cache.put(e.request, newResp);
 				cleanCache(DYNAMIC_CACHE, MAX_ITEMS_CACHE);
 			});
 
-			return response.clone();
-		})
-		.catch((err) => {
-			return caches.match(e.request);
+			return newResp.clone();
 		});
+	});
 
-	e.respondWith(newResp);
+	e.respondWith(response);
 });
