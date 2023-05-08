@@ -19,7 +19,14 @@ self.addEventListener('install', (e) => {
 
 	const staticCachePromise = caches.open(STATIC_CACHE).then((cache) => {
 		/* Save app shell in cache */
-		return cache.addAll(['/', 'index.html', 'css/style.css', 'img/main.jpg', 'js/app.js']);
+		return cache.addAll([
+			'/',
+			'index.html',
+			'css/style.css',
+			'img/main.jpg',
+			'img/no-img.jpg',
+			'js/app.js',
+		]);
 	});
 
 	const inmutableCachePromise = caches
@@ -52,14 +59,46 @@ self.addEventListener('install', (e) => {
 
 // 	e.respondWith(newResp);
 // });
+// self.addEventListener('fetch', (e) => {
+// 	/* Cache with network update */
+// 	if (e.request.url.includes('bootstrap')) return e.respondWith(caches.match(e.request));
+
+// 	const response = caches.open(STATIC_CACHE).then((cache) => {
+// 		fetch(e.request).then((newResp) => cache.put(e.request, newResp));
+
+// 		return cache.match(e.request);
+// 	});
+
+// 	e.respondWith(response);
+// });
 self.addEventListener('fetch', (e) => {
-	/* Cache with network update */
-	if (e.request.url.includes('bootstrap')) return e.respondWith(caches.match(e.request));
+	/* Cache & Network Race */
+	const response = new Promise((resolve, reject) => {
+		let rejected = false;
 
-	const response = caches.open(STATIC_CACHE).then((cache) => {
-		fetch(e.request).then((newResp) => cache.put(e.request, newResp));
+		const failedOnce = () => {
+			if (rejected) {
+				if (/\.(png|jpg)$/i.test(e.request.url)) {
+					resolve(caches.match('img/no-img.jpg'));
+				}
+				reject('Response not found');
+			} else {
+				rejected = true;
+			}
+		};
 
-		return cache.match(e.request);
+		fetch(e.request)
+			.then((resp) => {
+				resp.ok ? resolve(resp) : failedOnce();
+			})
+			.catch(failedOnce);
+
+		caches
+			.match(e.request)
+			.then((resp) => {
+				resp ? resolve(resp) : failedOnce();
+			})
+			.catch(failedOnce);
 	});
 
 	e.respondWith(response);
