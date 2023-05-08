@@ -32,23 +32,35 @@ self.addEventListener('install', (e) => {
 });
 
 /* Cache strategies */
+// self.addEventListener('fetch', (e) => {
+// 	/* Network with cache fallback */
+
+// 	const newResp = fetch(e.request)
+// 		.then((response) => {
+// 			if (!response) return caches.match(e.request);
+
+// 			caches.open(DYNAMIC_CACHE).then((cache) => {
+// 				cache.put(e.request, response);
+// 				cleanCache(DYNAMIC_CACHE, MAX_ITEMS_CACHE);
+// 			});
+
+// 			return response.clone();
+// 		})
+// 		.catch((err) => {
+// 			return caches.match(e.request);
+// 		});
+
+// 	e.respondWith(newResp);
+// });
 self.addEventListener('fetch', (e) => {
-	/* Network with cache fallback */
+	/* Cache with network update */
+	if (e.request.url.includes('bootstrap')) return e.respondWith(caches.match(e.request));
 
-	const newResp = fetch(e.request)
-		.then((response) => {
-			if (!response) return caches.match(e.request);
+	const response = caches.open(STATIC_CACHE).then((cache) => {
+		fetch(e.request).then((newResp) => cache.put(e.request, newResp));
 
-			caches.open(DYNAMIC_CACHE).then((cache) => {
-				cache.put(e.request, response);
-				cleanCache(DYNAMIC_CACHE, MAX_ITEMS_CACHE);
-			});
+		return cache.match(e.request);
+	});
 
-			return response.clone();
-		})
-		.catch((err) => {
-			return caches.match(e.request);
-		});
-
-	e.respondWith(newResp);
+	e.respondWith(response);
 });
