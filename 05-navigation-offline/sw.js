@@ -39,6 +39,21 @@ self.addEventListener('install', (e) => {
 	e.waitUntil(Promise.all([staticCachePromise, inmutableCachePromise]));
 });
 
+self.addEventListener('activate', (e) => {
+	console.log('[Service Worker] - Activated');
+	/* Clean old caches */
+
+	caches.keys().then((keys) => {
+		keys.forEach((key) => {
+			if (key != STATIC_CACHE && key.includes('static')) {
+				return caches.delete(key);
+			}
+		});
+	});
+
+	e.waitUntil();
+});
+
 self.addEventListener('fetch', (e) => {
 	const response = caches.match(e.request).then((resp) => {
 		if (resp) return resp;
