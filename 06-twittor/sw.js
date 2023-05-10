@@ -1,3 +1,5 @@
+importScripts('./js/sw-utils.js');
+
 const STATIC_CACHE = 'static-v1';
 const DYNAMIC_CACHE = 'dynamic-v1';
 const INMUTABLE_CACHE = 'inmutable-v1';
@@ -7,6 +9,7 @@ const APP_SHELL = [
 	'./index.html',
 	'./css/style.css',
 	'./js/app.js',
+	'./js/sw-utils.js',
 	'./img/favicon.ico',
 	'./img/avatars/spiderman.jpg',
 	'./img/avatars/ironman.jpg',
@@ -46,4 +49,16 @@ self.addEventListener('activate', (e) => {
 	});
 
 	e.waitUntil(response);
+});
+
+self.addEventListener('fetch', (e) => {
+	const response = caches.match(e.request).then((resp) => {
+		if (resp) return resp;
+
+		return fetch(e.request).then((newResp) =>
+			updateDynamicCache(DYNAMIC_CACHE, e.request, newResp)
+		);
+	});
+
+	e.respondWith(response);
 });
