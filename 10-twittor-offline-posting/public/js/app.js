@@ -24,12 +24,12 @@ var modalAvatar = $('#modal-avatar');
 var avatarBtns = $('.seleccion-avatar');
 var txtMensaje = $('#txtMensaje');
 
-// El usuario, contiene el ID del hÃ©roe seleccionado
-var usuario;
+// user, Id with Hero
+var user;
 
 // ===== Codigo de la aplicaciÃ³n
 
-function crearMensajeHTML(mensaje, personaje) {
+function createMessageInHTML(mensaje, personaje) {
 	var content = `
     <li class="animated fadeIn fast">
         <div class="avatar">
@@ -58,7 +58,7 @@ function logIn(ingreso) {
 		salirBtn.removeClass('oculto');
 		timeline.removeClass('oculto');
 		avatarSel.addClass('oculto');
-		modalAvatar.attr('src', 'img/avatars/' + usuario + '.jpg');
+		modalAvatar.attr('src', 'img/avatars/' + user + '.jpg');
 	} else {
 		nuevoBtn.addClass('oculto');
 		salirBtn.addClass('oculto');
@@ -71,9 +71,9 @@ function logIn(ingreso) {
 
 // Seleccion de personaje
 avatarBtns.on('click', function () {
-	usuario = $(this).data('user');
+	user = $(this).data('user');
 
-	titulo.text('@' + usuario);
+	titulo.text('@' + user);
 
 	logIn(true);
 });
@@ -114,13 +114,27 @@ cancelarBtn.on('click', function () {
 
 // Boton de enviar mensaje
 postBtn.on('click', function () {
-	var mensaje = txtMensaje.val();
-	if (mensaje.length === 0) {
+	var message = txtMensaje.val();
+	if (message.length === 0) {
 		cancelarBtn.click();
 		return;
 	}
 
-	crearMensajeHTML(mensaje, usuario);
+	fetch('api', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			message,
+			user,
+		}),
+	})
+		.then((res) => res.json())
+		.then((res) => console.log('app.js', res))
+		.catch((err) => console.log('app.json error', err));
+
+	createMessageInHTML(message, user);
 });
 
 //Get Messages from server
@@ -128,7 +142,7 @@ function getMessages() {
 	fetch('http://localhost:3000/api')
 		.then((res) => res.json())
 		.then((messages) => {
-			messages.forEach((message) => crearMensajeHTML(message.message, message.user));
+			messages.forEach((message) => createMessageInHTML(message.message, message.user));
 		});
 }
 
