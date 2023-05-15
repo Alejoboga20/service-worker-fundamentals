@@ -23,3 +23,19 @@ function actualizaCacheStatico(staticCache, req, APP_SHELL_INMUTABLE) {
 		});
 	}
 }
+
+//Handle API messages: Network with cache fallback
+const handleApiMessages = (cacheName, req) => {
+	const response = fetch(req)
+		.then((res) => {
+			if (res.ok) {
+				actualizaCacheDinamico(cacheName, req, res.clone());
+				return res.clone();
+			} else {
+				return caches.match(req);
+			}
+		})
+		.catch((err) => caches.match(req));
+
+	return response;
+};

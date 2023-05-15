@@ -53,16 +53,22 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-	const respuesta = caches.match(e.request).then((res) => {
-		if (res) {
-			actualizaCacheStatico(STATIC_CACHE, e.request, APP_SHELL_INMUTABLE);
-			return res;
-		} else {
-			return fetch(e.request).then((newRes) => {
-				return actualizaCacheDinamico(DYNAMIC_CACHE, e.request, newRes);
-			});
-		}
-	});
+	let response;
 
-	e.respondWith(respuesta);
+	if (e.request.url.includes('/api')) {
+		response = handleApiMessages(DYNAMIC_CACHE, e.request);
+	} else {
+		response = caches.match(e.request).then((res) => {
+			if (res) {
+				actualizaCacheStatico(STATIC_CACHE, e.request, APP_SHELL_INMUTABLE);
+				return res;
+			} else {
+				return fetch(e.request).then((newRes) => {
+					return actualizaCacheDinamico(DYNAMIC_CACHE, e.request, newRes);
+				});
+			}
+		});
+	}
+
+	e.respondWith(response);
 });
