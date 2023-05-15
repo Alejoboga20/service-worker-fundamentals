@@ -147,3 +147,11 @@ function getMessages() {
 }
 
 getMessages();
+
+/* Detech changes in connection */
+const isOnline = () => {
+	navigator.onLine ? console.log('is online') : console.log('is offline');
+};
+
+window.addEventListener('online', isOnline);
+window.addEventListener('offline', isOnline);
