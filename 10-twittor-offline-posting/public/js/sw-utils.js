@@ -29,15 +29,17 @@ const handleApiMessages = (cacheName, req) => {
 	if (req.clone().method === 'POST') {
 		// Post new message
 
-		req
-			.clone()
-			.text()
-			.then((body) => {
-				const bodyObj = JSON.parse(body);
-				saveMessage(bodyObj);
-			});
-
-		return fetch(req);
+		if (self.registration.sync) {
+			return req
+				.clone()
+				.text()
+				.then((body) => {
+					const bodyObj = JSON.parse(body);
+					return saveMessage(bodyObj);
+				});
+		} else {
+			return fetch(req);
+		}
 	} else {
 		return fetch(req)
 			.then((res) => {

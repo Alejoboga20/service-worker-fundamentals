@@ -30,6 +30,7 @@ router.post('/', (req, res) => {
 	const message = req.body.message;
 	const user = req.body.user;
 
+	console.log(req.body);
 	messages.push({ message, user });
 
 	return res.json({ ok: true, message, user });

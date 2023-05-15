@@ -76,3 +76,14 @@ self.addEventListener('fetch', (e) => {
 
 	e.respondWith(response);
 });
+
+/* Async Tasks */
+self.addEventListener('sync', (e) => {
+	console.log('[Service Worker] - Sync event fired');
+
+	if (e.tag === 'new post') {
+		// Post messages to API
+		const response = postMessages();
+		e.waitUntil(response);
+	}
+});
