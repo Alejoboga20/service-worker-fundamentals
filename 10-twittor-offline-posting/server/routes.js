@@ -10,13 +10,13 @@ const messages = [
 	},
 	{
 		_id: '2',
-		user: 'superman',
-		message: "Hi, I'm superman",
+		user: 'hulk',
+		message: "Hi, I'm hulk",
 	},
 	{
 		_id: '2',
-		user: 'Batman',
-		message: 'Because I am Batman',
+		user: 'ironman',
+		message: 'Because I am ironman',
 	},
 ];
 
