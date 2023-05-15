@@ -28,6 +28,15 @@ function actualizaCacheStatico(staticCache, req, APP_SHELL_INMUTABLE) {
 const handleApiMessages = (cacheName, req) => {
 	if (req.clone().method === 'POST') {
 		// Post new message
+
+		req
+			.clone()
+			.text()
+			.then((body) => {
+				const bodyObj = JSON.parse(body);
+				saveMessage(bodyObj);
+			});
+
 		return fetch(req);
 	} else {
 		return fetch(req)
