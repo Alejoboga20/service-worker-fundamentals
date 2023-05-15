@@ -1,6 +1,6 @@
 // Routes.js - Módulo de rutas
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const messages = [
 	{
@@ -20,9 +20,19 @@ const messages = [
 	},
 ];
 
-// GET /messages
+// GET messages
 router.get('/', function (req, res) {
 	res.json(messages);
+});
+
+//POST messages
+router.post('/', (req, res) => {
+	const message = req.body.message;
+	const user = req.body.user;
+
+	messages.push({ message, user });
+
+	return res.json({ ok: true, message, user });
 });
 
 module.exports = router;
