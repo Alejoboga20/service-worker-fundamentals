@@ -1,6 +1,10 @@
 (function () {
 	'use strict';
 
+	if (navigator.serviceWorker) {
+		navigator.serviceWorker.register('../sw.js');
+	}
+
 	var ENTER_KEY = 13;
 	var newTodoDom = document.getElementById('new-todo');
 	var syncDom = document.getElementById('sync-wrapper');
@@ -30,11 +34,8 @@
 	}
 
 	// Show the current list of todos by reading them from the database
-	function showTodos() {
-		db.allDocs({ include_docs: true }, function (err, doc) {
-			redrawTodosUI(doc.rows);
-		});
-	}
+	const showTodos = () =>
+		db.allDocs({ include_docs: true }).then((docs) => redrawTodosUI(docs.rows));
 
 	function checkboxChanged(todo, event) {
 		todo.completed = event.target.checked;
