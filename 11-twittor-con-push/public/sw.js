@@ -91,3 +91,11 @@ self.addEventListener('sync', (e) => {
 		e.waitUntil(respuesta);
 	}
 });
+
+/* Listen push notifications */
+self.addEventListener('push', (e) => {
+	const title = e.data.text();
+	const options = {};
+
+	e.waitUntil(self.registration.showNotification(title, options));
+});

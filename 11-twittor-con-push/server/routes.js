@@ -49,8 +49,10 @@ router.get('/key', (req, res) => {
 });
 
 /* Send push notifications */
-router.get('/push', (req, res) => {
-	res.json('push');
+router.post('/push', (req, res) => {
+	push.sendPush(req.body);
+
+	res.json('push sent');
 });
 
 module.exports = router;
