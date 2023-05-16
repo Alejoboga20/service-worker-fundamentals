@@ -50,7 +50,12 @@ router.get('/key', (req, res) => {
 
 /* Send push notifications */
 router.post('/push', (req, res) => {
-	push.sendPush(req.body);
+	const post = {
+		title: req.body.title,
+		body: req.body.body,
+		user: req.body.user,
+	};
+	push.sendPush(post);
 
 	res.json('push sent');
 });
