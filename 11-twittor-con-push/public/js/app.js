@@ -214,3 +214,12 @@ function notificate() {
 
 //notificate();
 verifySubscription(false);
+
+// GET Public Key
+function getPublicKey() {
+	return fetch('api/key')
+		.then((res) => res.arrayBuffer())
+		.then((key) => new Uint8Array(key));
+}
+
+getPublicKey().then(console.log);
