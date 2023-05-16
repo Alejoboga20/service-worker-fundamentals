@@ -237,8 +237,16 @@ btnDesactivadas.on('click', () => {
 			})
 			.then((res) => res.toJSON())
 			.then((subscription) => {
-				console.log({ subscription });
-				verifySubscription(subscription);
+				/* Post Subscription */
+				fetch('api/subscribe', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(subscription),
+				})
+					.then(verifySubscription)
+					.catch(console.log);
 			});
 	});
 });
