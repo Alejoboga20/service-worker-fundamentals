@@ -33,4 +33,19 @@ router.post('/', function (req, res) {
 	});
 });
 
+/* Save subscription */
+router.post('/subscribe', (req, res) => {
+	res.json('subscribe');
+});
+
+/* Get public key */
+router.get('/key', (req, res) => {
+	res.json('key');
+});
+
+/* Send push notifications */
+router.get('/push', (req, res) => {
+	res.json('push');
+});
+
 module.exports = router;
