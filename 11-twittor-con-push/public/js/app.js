@@ -250,3 +250,12 @@ btnDesactivadas.on('click', () => {
 			});
 	});
 });
+
+/* Cancle Subscription */
+function cancelSubscription() {
+	swReg.pushManager.getSubscription().then((subscription) => {
+		subscription.unsubscribe().then(() => verifySubscription(false));
+	});
+}
+
+btnActivadas.on('click', () => cancelSubscription());

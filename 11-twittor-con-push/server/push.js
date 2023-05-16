@@ -1,8 +1,7 @@
 const fs = require('fs');
 const urlSafeBase64 = require('urlsafe-base64');
 const vapid = require('./vapid');
-
-const subscriptions = [];
+const subscriptions = require('./subs-db.json');
 
 module.exports.getKey = () => {
 	return urlSafeBase64.decode(vapid.publicKey);
