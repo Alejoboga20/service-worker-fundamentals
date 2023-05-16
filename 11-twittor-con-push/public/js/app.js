@@ -1,12 +1,19 @@
 var url = window.location.href;
 var swLocation = '/twittor/sw.js';
 
+let swReg;
+
 if (navigator.serviceWorker) {
 	if (url.includes('localhost')) {
 		swLocation = '/sw.js';
 	}
 
-	navigator.serviceWorker.register(swLocation);
+	window.addEventListener('load', function () {
+		navigator.serviceWorker.register(swLocation).then(function (reg) {
+			swReg = reg;
+			swReg.pushManager.getSubscription().then(verifySubscription);
+		});
+	});
 }
 
 // Referencias de jQuery
@@ -212,9 +219,6 @@ function notificate() {
 	}
 }
 
-//notificate();
-verifySubscription(false);
-
 // GET Public Key
 function getPublicKey() {
 	return fetch('api/key')
@@ -222,4 +226,19 @@ function getPublicKey() {
 		.then((key) => new Uint8Array(key));
 }
 
-getPublicKey().then(console.log);
+btnDesactivadas.on('click', () => {
+	if (!swReg) return console.log('Service Worker is not registered');
+
+	getPublicKey().then((key) => {
+		swReg.pushManager
+			.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey: key,
+			})
+			.then((res) => res.toJSON())
+			.then((subscription) => {
+				console.log({ subscription });
+				verifySubscription(subscription);
+			});
+	});
+});
