@@ -178,3 +178,39 @@ window.addEventListener('online', isOnline);
 window.addEventListener('offline', isOnline);
 
 isOnline();
+
+/* Notifications */
+function verifySubscription(active) {
+	if (active) {
+		btnActivadas.removeClass('oculto');
+		btnDesactivadas.addClass('oculto');
+	} else {
+		btnActivadas.addClass('oculto');
+		btnDesactivadas.removeClass('oculto');
+	}
+}
+
+function sentNotification() {
+	const notificationOptions = { body: 'This is the body', icon: '../img/icons/icon-72x72.png' };
+	const newNotification = new Notification('Hello', notificationOptions);
+
+	newNotification.onclick = () => console.log('notification clicked');
+}
+
+function notificate() {
+	if (!window.Notification) return console.log('This browser does not support notifications');
+
+	if (Notification.permission === 'granted') {
+		sentNotification();
+	} else if (Notification.permission !== 'denied' || Notification.permission === 'default') {
+		Notification.requestPermission(function (permission) {
+			console.log({ permission });
+			if (permission === 'granted') {
+				sentNotification();
+			}
+		});
+	}
+}
+
+//notificate();
+verifySubscription(false);
