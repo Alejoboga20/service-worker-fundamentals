@@ -406,7 +406,8 @@ btnPhoto.on('click', () => {
 
 // Boton para tomar la foto
 btnTomarFoto.on('click', () => {
-	console.log('Botón tomar foto');
+	foto = camara.tomarFoto();
+	camara.apagar();
 });
 
 // Share API
