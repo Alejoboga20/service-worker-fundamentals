@@ -64,7 +64,7 @@ var usuario;
 
 // ===== Codigo de la aplicación
 
-function crearMensajeHTML(mensaje, personaje, lat, lng, foto) {
+function crearMensajeHTML(mensaje, personaje, lat, lng) {
 	// console.log(mensaje, personaje, lat, lng);
 
 	var content = `
@@ -81,13 +81,6 @@ function crearMensajeHTML(mensaje, personaje, lat, lng, foto) {
                 <br/>
                 ${mensaje}
                 `;
-
-	if (foto) {
-		content += `
-                <br>
-                <img class="foto-mensaje" src="${foto}">
-        `;
-	}
 
 	content += `</div>        
                 <div class="arrow"></div>
@@ -214,7 +207,6 @@ postBtn.on('click', function () {
 		user: usuario,
 		lat: lat,
 		lng: lng,
-		foto: foto,
 	};
 
 	fetch('api', {
@@ -228,12 +220,7 @@ postBtn.on('click', function () {
 		.then((res) => console.log('app.js', res))
 		.catch((err) => console.log('app.js error:', err));
 
-	camera.apagar();
-	contenedorCamara.addClass('oculto');
-
-	crearMensajeHTML(mensaje, usuario, lat, lng, foto);
-
-	foto = null;
+	crearMensajeHTML(mensaje, usuario, lat, lng);
 });
 
 // Obtener mensajes del servidor
@@ -400,6 +387,9 @@ btnLocation.on('click', () => {
 	});
 
 	navigator.geolocation.getCurrentPosition((pos) => {
+		lat = pos.coords.latitude;
+		lng = pos.coords.longitude;
+		console.log({ lat, lng });
 		mostrarMapaModal(pos.coords.latitude, pos.coords.longitude);
 	});
 });
